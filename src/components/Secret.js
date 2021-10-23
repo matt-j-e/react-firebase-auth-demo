@@ -8,7 +8,7 @@ import { useHistory } from "react-router";
 const Secret = () => {
 
   const history = useHistory();
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
   const [ token, setToken ] = useState("");
   const [ quotes, setQuotes ] = useState([]);
 
@@ -17,10 +17,10 @@ const Secret = () => {
       setUser(firebaseUser);
       firebaseUser.getIdToken().then(token => {
         setToken(token);
-        // console.log(token);
+        console.log("JWT:", token);
       })
     } else {
-      // history.push("/login");
+      history.push("/login");
     }
   });
 
@@ -34,11 +34,17 @@ const Secret = () => {
   }, [token]);
 
   return (
-    <h1>
-      {user 
-      ? "Content for logged-in users only" 
+    <section>
+      {quotes.length > 0 
+      ? 
+      quotes.map(quote => {
+        return (<article key={quote.id}>
+          <p><strong>{quote.name}</strong></p>
+          <p>{quote.quote}</p>
+        </article>)
+      }) 
       : "You need to login before you see anything here."}
-    </h1>
+    </section>
   )
 
 }
